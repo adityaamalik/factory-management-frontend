@@ -22,7 +22,11 @@ const Returns = () => {
 
   useEffect(() => {
     axios
-      .get(`/transactions?type=returns`)
+      .get(
+        `/transactions?type=returns&userID=${localStorage.getItem(
+          "employeeId"
+        )}`
+      )
       .then((res) => {
         setReturns(res.data);
       })
@@ -251,6 +255,14 @@ const Returns = () => {
         )}
 
         <Divider>Returns History</Divider>
+
+        {returns.length === 0 && (
+          <>
+            <br />
+            <br />
+            <h3>No Returns Yet</h3>
+          </>
+        )}
 
         <Row justify="center" align="middle">
           {returns.map((r, index) => {

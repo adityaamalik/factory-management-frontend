@@ -101,7 +101,7 @@ const Login = () => {
             <h1>Hi, Employee</h1>
             <Input
               type="password"
-              placeholder="Password for employee"
+              placeholder="Employee Passcode"
               size="large"
               style={{ width: "200px" }}
               onChange={(e) => setPassword(e.target.value)}

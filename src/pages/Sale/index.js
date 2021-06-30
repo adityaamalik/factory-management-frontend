@@ -121,9 +121,13 @@ const Sale = (props) => {
 
           <Divider></Divider>
 
-          <Button onClick={deleteProduct} danger>
-            Delete Sale
-          </Button>
+          {localStorage.getItem("userType") === "admin" &&
+            localStorage.getItem("userType") !== undefined && (
+              <Button onClick={deleteProduct} danger>
+                Delete Sale
+              </Button>
+            )}
+
           <br />
           <br />
         </div>

@@ -22,7 +22,9 @@ const Sales = () => {
 
   useEffect(() => {
     axios
-      .get(`/transactions?type=sales`)
+      .get(
+        `/transactions?type=sales&userID=${localStorage.getItem("employeeId")}`
+      )
       .then((res) => {
         setSales(res.data);
       })
@@ -252,6 +254,14 @@ const Sales = () => {
 
         <Divider>Sales History</Divider>
 
+        {sales.length === 0 && (
+          <>
+            <br />
+            <br />
+            <h3>No Sales Yet</h3>
+          </>
+        )}
+
         <Row justify="center" align="middle">
           {sales.map((sale, index) => {
             return (
@@ -271,7 +281,7 @@ const Sales = () => {
                   >
                     <p>Sale Number : {index + 1}</p>
                     <p>Date : {moment(sale.date).format("DD-MM-YYYY")}</p>
-                    <strong>Employee Name : {sale.employee_id}</strong>
+                    <strong>Employee ID : {sale.employee_id}</strong>
                     <p>Total Products : {sale.products.length}</p>
                     <p>Total Price : ₹ {sale.total_price} /-</p>
                   </Card>

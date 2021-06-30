@@ -28,12 +28,19 @@ const menu = (
         Returns
       </S.Span>
     </Menu.Item>
-    <Menu.Item key="4">
-      <S.Span href="/employees">
-        {window.location.pathname === "/employees" && <CaretRightOutlined />}
-        Employees
-      </S.Span>
-    </Menu.Item>
+
+    {localStorage.getItem("userType") === "admin" &&
+      localStorage.getItem("userType") !== undefined && (
+        <Menu.Item key="4">
+          <S.Span href="/employees">
+            {window.location.pathname === "/employees" && (
+              <CaretRightOutlined />
+            )}
+            Employees
+          </S.Span>
+        </Menu.Item>
+      )}
+
     <Menu.Item key="5">
       <S.Span href="/" onClick={() => localStorage.clear()}>
         Logout

@@ -7,11 +7,11 @@ export const Header = styled.header`
 `;
 
 export const Logo = styled.img`
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 80px;
   @media only screen and (max-width: 768px) {
-    height: 20px;
-    width: 20px;
+    height: 50px;
+    width: 50px;
   }
 `;
 
