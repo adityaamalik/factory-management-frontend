@@ -54,71 +54,80 @@ const Products = () => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Stock</h1>
-        <Button onClick={() => toggleProductInput(!productInput)}>
-          Add a new product
-        </Button>
-        {productInput && (
-          <div style={{ marginTop: "15px" }}>
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={name}
-              placeholder="Name"
-              onChange={(val) => setName(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={imageURI}
-              placeholder="Image URL"
-              onChange={(val) => setImageURI(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={stock}
-              placeholder="Stock"
-              onChange={(val) => setStock(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={price}
-              placeholder="Price"
-              onChange={(val) => setPrice(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={size}
-              placeholder="Size"
-              onChange={(val) => setSize(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={unit}
-              placeholder="Unit ( mL / L )"
-              onChange={(val) => setUnit(val.target.value)}
-            />
-            <br />
-            <Button onClick={() => submitProduct()} style={{ margin: "10px" }}>
-              <PlusOutlined />
-              Add
-            </Button>
-          </div>
-        )}
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleProductInput(!productInput)}>
+                Add a new product
+              </Button>
+              {productInput && (
+                <div style={{ marginTop: "15px" }}>
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={name}
+                    placeholder="Name"
+                    onChange={(val) => setName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={imageURI}
+                    placeholder="Image URL"
+                    onChange={(val) => setImageURI(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={stock}
+                    placeholder="Stock"
+                    onChange={(val) => setStock(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={price}
+                    placeholder="Price"
+                    onChange={(val) => setPrice(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={size}
+                    placeholder="Size"
+                    onChange={(val) => setSize(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={unit}
+                    placeholder="Unit ( mL / L )"
+                    onChange={(val) => setUnit(val.target.value)}
+                  />
+                  <br />
+                  <Button
+                    onClick={() => submitProduct()}
+                    style={{ margin: "10px" }}
+                  >
+                    <PlusOutlined />
+                    Add
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+
         <Divider>Products</Divider>
         <Row justify="center" align="middle">
           {products.map((product, index) => {

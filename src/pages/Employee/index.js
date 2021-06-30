@@ -68,36 +68,44 @@ const Employee = (props) => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Employee Details</h1>
-        <Button onClick={() => toggleEditBox(!editBox)}>
-          Edit Employee Details
-        </Button>
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleEditBox(!editBox)}>
+                Edit Employee Details
+              </Button>
 
-        {editBox && (
-          <div style={{ marginTop: "15px" }}>
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={name}
-              placeholder="Name"
-              onChange={(val) => setName(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={phone}
-              placeholder="Phone Number"
-              onChange={(val) => setPhone(val.target.value)}
-            />
-            <br />
-            <Button onClick={() => submitEmployee()} style={{ margin: "10px" }}>
-              <CheckOutlined />
-              Edit
-            </Button>
-          </div>
-        )}
+              {editBox && (
+                <div style={{ marginTop: "15px" }}>
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={name}
+                    placeholder="Name"
+                    onChange={(val) => setName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={phone}
+                    placeholder="Phone Number"
+                    onChange={(val) => setPhone(val.target.value)}
+                  />
+                  <br />
+                  <Button
+                    onClick={() => submitEmployee()}
+                    style={{ margin: "10px" }}
+                  >
+                    <CheckOutlined />
+                    Edit
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
 
         <div style={{ marginTop: "40px" }}>
           <h3>
@@ -114,9 +122,12 @@ const Employee = (props) => {
             <span style={{ color: "gray" }}>{employee?.passcode}</span>
           </h3>
           <br />
-          <Button onClick={deleteEmployee} danger>
-            Delete Employee
-          </Button>
+          {localStorage.getItem("userType") === "admin" &&
+            localStorage.getItem("userType") !== undefined && (
+              <Button onClick={deleteEmployee} danger>
+                Delete Employee
+              </Button>
+            )}
         </div>
       </div>
     </>

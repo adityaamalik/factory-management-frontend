@@ -82,74 +82,79 @@ const Shop = (props) => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Shop Details</h1>
-        <Button onClick={() => toggleEditBox(!editBox)}>
-          Edit Shop Details
-        </Button>
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleEditBox(!editBox)}>
+                Edit Shop Details
+              </Button>
 
-        {editBox && (
-          <div style={{ marginTop: "15px" }}>
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={name}
-              placeholder="Name of shop"
-              onChange={(val) => setName(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={ownerName}
-              placeholder="Name of Owner"
-              onChange={(val) => setOwnerName(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={address}
-              placeholder="Address"
-              onChange={(val) => setAddress(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={area}
-              placeholder="Area"
-              onChange={(val) => setArea(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={pinCode}
-              placeholder="Pin Code"
-              onChange={(val) => setPinCode(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={phoneNumber1}
-              placeholder="Phone Number 1"
-              onChange={(val) => setPhoneNumber1(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={phoneNumber2}
-              placeholder="Phone Number 2 ( optional )"
-              onChange={(val) => setPhoneNumber2(val.target.value)}
-            />
-            <br />
-            <Button onClick={submitShop} style={{ margin: "10px" }}>
-              <CheckOutlined />
-              Edit
-            </Button>
-          </div>
-        )}
+              {editBox && (
+                <div style={{ marginTop: "15px" }}>
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={name}
+                    placeholder="Name of shop"
+                    onChange={(val) => setName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={ownerName}
+                    placeholder="Name of Owner"
+                    onChange={(val) => setOwnerName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={address}
+                    placeholder="Address"
+                    onChange={(val) => setAddress(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={area}
+                    placeholder="Area"
+                    onChange={(val) => setArea(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={pinCode}
+                    placeholder="Pin Code"
+                    onChange={(val) => setPinCode(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={phoneNumber1}
+                    placeholder="Phone Number 1"
+                    onChange={(val) => setPhoneNumber1(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={phoneNumber2}
+                    placeholder="Phone Number 2 ( optional )"
+                    onChange={(val) => setPhoneNumber2(val.target.value)}
+                  />
+                  <br />
+                  <Button onClick={submitShop} style={{ margin: "10px" }}>
+                    <CheckOutlined />
+                    Edit
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
 
         <div style={{ marginTop: "40px" }}>
           <a href={shop?.qr_code} download>
@@ -190,9 +195,16 @@ const Shop = (props) => {
             Shop Code : <span style={{ color: "gray" }}>{shop?.shop_code}</span>
           </h3>
           <br />
-          <Button onClick={deleteShop} danger>
-            Delete Shop
-          </Button>
+
+          {localStorage.getItem("userType") === "admin" &&
+            localStorage.getItem("userType") !== undefined && (
+              <>
+                <Button onClick={deleteShop} danger>
+                  Delete Shop
+                </Button>
+              </>
+            )}
+
           <br />
           <br />
         </div>

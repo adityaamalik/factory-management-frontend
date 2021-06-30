@@ -12,15 +12,22 @@ const Employees = () => {
   const [phone, setPhone] = useState("");
 
   useEffect(() => {
-    axios
-      .get("/employees")
-      .then((response) => {
-        setEmployees(response.data);
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (
+      localStorage.getItem("userType") === "admin" &&
+      localStorage.getItem("userType") !== undefined
+    ) {
+      axios
+        .get("/employees")
+        .then((response) => {
+          setEmployees(response.data);
+          console.log(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      window.location.pathname = "/home";
+    }
   }, []);
 
   const generatePasscode = () => {
@@ -61,35 +68,44 @@ const Employees = () => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Employees</h1>
-        <Button onClick={() => toggleProductInput(!productInput)}>
-          Add a new employee
-        </Button>
-        {productInput && (
-          <div style={{ marginTop: "15px" }}>
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={name}
-              placeholder="Name"
-              onChange={(val) => setName(val.target.value)}
-            />
-            <br />
-            <Input
-              required
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={phone}
-              placeholder="Phone Number"
-              onChange={(val) => setPhone(val.target.value)}
-            />
-            <br />
-            <Button onClick={() => submitEmployee()} style={{ margin: "10px" }}>
-              <PlusOutlined />
-              Add
-            </Button>
-          </div>
-        )}
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleProductInput(!productInput)}>
+                Add a new employee
+              </Button>
+              {productInput && (
+                <div style={{ marginTop: "15px" }}>
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={name}
+                    placeholder="Name"
+                    onChange={(val) => setName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    required
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={phone}
+                    placeholder="Phone Number"
+                    onChange={(val) => setPhone(val.target.value)}
+                  />
+                  <br />
+                  <Button
+                    onClick={() => submitEmployee()}
+                    style={{ margin: "10px" }}
+                  >
+                    <PlusOutlined />
+                    Add
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+
         <Divider>Employees</Divider>
         <Row justify="center" align="middle">
           {employees.map((emp, index) => {

@@ -14,6 +14,9 @@ import QRCode from "qrcode";
 const Shops = () => {
   const [shopInput, toggleShopInput] = useState(false);
   const [shops, setShops] = useState([]);
+  const [originalShops, setOriginalShops] = useState([]);
+
+  const [searchVal, setSearchVal] = useState("");
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -81,9 +84,26 @@ const Shops = () => {
   useEffect(() => {
     axios
       .get("/shops")
-      .then((res) => setShops(res.data))
+      .then((res) => {
+        setShops(res.data);
+        setOriginalShops(res.data);
+      })
       .catch((err) => message.error("Some Error occured !"));
   }, []);
+
+  const handleSearch = () => {
+    const filteredShops = originalShops.filter((val) => {
+      return (
+        val.shop_code.includes(searchVal) ||
+        val.name.includes(searchVal) ||
+        val.owner_name.includes(searchVal) ||
+        val.area.includes(searchVal) ||
+        val.address.includes(searchVal)
+      );
+    });
+
+    setShops(filteredShops);
+  };
 
   return (
     <>
@@ -91,83 +111,119 @@ const Shops = () => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Shops</h1>
-        <Button onClick={() => toggleShopInput(!shopInput)}>
-          Add a new shop
-        </Button>
-        {shopInput && (
-          <div style={{ marginTop: "15px" }}>
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={name}
-              placeholder="Name of shop"
-              onChange={(val) => setName(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={ownerName}
-              placeholder="Name of Owner"
-              onChange={(val) => setOwnerName(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={address}
-              placeholder="Address"
-              onChange={(val) => setAddress(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={area}
-              placeholder="Area"
-              onChange={(val) => setArea(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={pinCode}
-              placeholder="Pin Code"
-              onChange={(val) => setPinCode(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="text"
-              value={phoneNumber1}
-              placeholder="Phone Number 1"
-              onChange={(val) => setPhoneNumber1(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={phoneNumber2}
-              placeholder="Phone Number 2 ( optional )"
-              onChange={(val) => setPhoneNumber2(val.target.value)}
-            />
-            <br />
-            <Input
-              style={{ margin: "10px", width: "80%" }}
-              type="number"
-              value={numberOfFridge}
-              placeholder="Number Of Fridges"
-              onChange={(val) => setNumberOfFridge(val.target.value)}
-            />
-            <br />
-            <Button onClick={submitShop} style={{ margin: "10px" }}>
-              <PlusOutlined />
-              Add
-            </Button>
-          </div>
-        )}
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleShopInput(!shopInput)}>
+                Add a new shop
+              </Button>
+              {shopInput && (
+                <div style={{ marginTop: "15px" }}>
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={name}
+                    placeholder="Name of shop"
+                    onChange={(val) => setName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={ownerName}
+                    placeholder="Name of Owner"
+                    onChange={(val) => setOwnerName(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={address}
+                    placeholder="Address"
+                    onChange={(val) => setAddress(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={area}
+                    placeholder="Area"
+                    onChange={(val) => setArea(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={pinCode}
+                    placeholder="Pin Code"
+                    onChange={(val) => setPinCode(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={phoneNumber1}
+                    placeholder="Phone Number 1"
+                    onChange={(val) => setPhoneNumber1(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={phoneNumber2}
+                    placeholder="Phone Number 2 ( optional )"
+                    onChange={(val) => setPhoneNumber2(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="number"
+                    value={numberOfFridge}
+                    placeholder="Number Of Fridges"
+                    onChange={(val) => setNumberOfFridge(val.target.value)}
+                  />
+                  <br />
+                  <Button onClick={submitShop} style={{ margin: "10px" }}>
+                    <PlusOutlined />
+                    Add
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
 
-        <Divider>Shops</Divider>
+        <Divider>Search Shops</Divider>
+
+        <Row justify="center" align="middle">
+          <Col span={16}>
+            <Input
+              type="text"
+              placeholder="Search for shops"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <Button onClick={handleSearch}>Search</Button>
+          </Col>
+        </Row>
+
+        <br />
+
+        <Row justify="center" align="middle">
+          <Col>
+            <Button
+              onClick={() => {
+                setSearchVal("");
+                setShops(originalShops);
+              }}
+            >
+              Clear
+            </Button>
+          </Col>
+        </Row>
+
+        <Divider> Shops</Divider>
 
         <Row justify="center" align="middle">
           {shops.map((shop, index) => {
@@ -198,6 +254,7 @@ const Shops = () => {
                     <p>
                       <PhoneOutlined /> {shop.phone_number_1}
                     </p>
+                    <p>Shop Code : {shop.shop_code}</p>
                   </Card>
                 </Link>
               </Col>

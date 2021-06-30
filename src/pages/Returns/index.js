@@ -269,7 +269,7 @@ const Returns = () => {
                     bordered={true}
                     style={{ minWidth: 300, marginTop: 30 }}
                   >
-                    <p>Sale Number : {index + 1}</p>
+                    <p>Return Number : {index + 1}</p>
                     <p>Date : {moment(r.date).format("DD-MM-YYYY")}</p>
                     <strong>Employee Name : {r.employee_id}</strong>
                     <p>Total Products : {r.products.length}</p>

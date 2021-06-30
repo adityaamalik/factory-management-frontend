@@ -79,71 +79,77 @@ const Product = (props) => {
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
         <h1>Product Details</h1>
-        <Button onClick={() => toggleEditBox(!editBox)}>
-          Edit Product Details
-        </Button>
 
-        {editBox && (
-          <>
-            <div style={{ marginTop: "15px" }}>
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="text"
-                value={name}
-                placeholder="Name"
-                onChange={(val) => setName(val.target.value)}
-              />
-              <br />
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="text"
-                value={imageURI}
-                placeholder="Image URL"
-                onChange={(val) => setImageURI(val.target.value)}
-              />
-              <br />
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="number"
-                value={stock}
-                placeholder="Stock"
-                onChange={(val) => setStock(val.target.value)}
-              />
-              <br />
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="number"
-                value={price}
-                placeholder="Price"
-                onChange={(val) => setPrice(val.target.value)}
-              />
-              <br />
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="number"
-                value={size}
-                placeholder="Size"
-                onChange={(val) => setSize(val.target.value)}
-              />
-              <br />
-              <Input
-                style={{ margin: "10px", width: "80%" }}
-                type="text"
-                value={unit}
-                placeholder="Unit ( mL / L )"
-                onChange={(val) => setUnit(val.target.value)}
-              />
-              <br />
-              <Button
-                onClick={() => submitProduct()}
-                style={{ margin: "10px" }}
-              >
-                <CheckOutlined />
-                Edit
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Button onClick={() => toggleEditBox(!editBox)}>
+                Edit Product Details
               </Button>
-            </div>
-          </>
-        )}
+
+              {editBox && (
+                <>
+                  <div style={{ marginTop: "15px" }}>
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="text"
+                      value={name}
+                      placeholder="Name"
+                      onChange={(val) => setName(val.target.value)}
+                    />
+                    <br />
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="text"
+                      value={imageURI}
+                      placeholder="Image URL"
+                      onChange={(val) => setImageURI(val.target.value)}
+                    />
+                    <br />
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="number"
+                      value={stock}
+                      placeholder="Stock"
+                      onChange={(val) => setStock(val.target.value)}
+                    />
+                    <br />
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="number"
+                      value={price}
+                      placeholder="Price"
+                      onChange={(val) => setPrice(val.target.value)}
+                    />
+                    <br />
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="number"
+                      value={size}
+                      placeholder="Size"
+                      onChange={(val) => setSize(val.target.value)}
+                    />
+                    <br />
+                    <Input
+                      style={{ margin: "10px", width: "80%" }}
+                      type="text"
+                      value={unit}
+                      placeholder="Unit ( mL / L )"
+                      onChange={(val) => setUnit(val.target.value)}
+                    />
+                    <br />
+                    <Button
+                      onClick={() => submitProduct()}
+                      style={{ margin: "10px" }}
+                    >
+                      <CheckOutlined />
+                      Edit
+                    </Button>
+                  </div>
+                </>
+              )}
+            </>
+          )}
 
         <div style={{ marginTop: "40px" }}>
           <img src={product?.image} height="200px" width="auto" alt="Product" />
@@ -168,9 +174,15 @@ const Product = (props) => {
             <span style={{ color: "gray" }}>{product?.stock}</span>
           </h3>
           <br />
-          <Button onClick={deleteProduct} danger>
-            Delete Product
-          </Button>
+          {localStorage.getItem("userType") === "admin" &&
+            localStorage.getItem("userType") !== undefined && (
+              <>
+                <Button onClick={deleteProduct} danger>
+                  Delete Product
+                </Button>
+              </>
+            )}
+
           <br />
           <br />
         </div>
