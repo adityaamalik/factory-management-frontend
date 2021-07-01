@@ -9,10 +9,10 @@ import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 
 //production
-axios.defaults.baseURL = "https://silvassa-bottling-company.herokuapp.com/";
+// axios.defaults.baseURL = "https://silvassa-bottling-company.herokuapp.com/";
 
 //development
-// axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = "http://localhost:3000";
 
 const App = () => (
   <BrowserRouter>

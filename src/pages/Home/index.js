@@ -12,6 +12,10 @@ const Home = () => {
         marginBottom: "30px",
       }}
     >
+      <h3>
+        <span style={{ color: "gray" }}>Logged in as</span>{" "}
+        <strong>{localStorage.getItem("employeeName")}</strong>
+      </h3>
       <Row
         type="flex"
         justify="center"

@@ -45,6 +45,10 @@ const Sale = (props) => {
       <div
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
+        <h3 style={{ marginBottom: "20px" }}>
+          <span style={{ color: "gray" }}>Logged in as</span>{" "}
+          <strong>{localStorage.getItem("employeeName")}</strong>
+        </h3>
         <h1>Sale Details</h1>
 
         <div style={{ marginTop: "40px" }}>

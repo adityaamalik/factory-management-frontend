@@ -1,7 +1,7 @@
 import { message, Button, Input } from "antd";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined, LinkOutlined } from "@ant-design/icons";
 
 const Shop = (props) => {
   const [shop, setShop] = useState();
@@ -9,6 +9,7 @@ const Shop = (props) => {
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [mapLocation, setMapLocation] = useState("");
   const [area, setArea] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -39,6 +40,7 @@ const Shop = (props) => {
     axios
       .put(`/shops/${props.location.state.id}`, {
         owner_name: ownerName,
+        map_location: mapLocation,
         name: name,
         address: address,
         area: area,
@@ -48,6 +50,7 @@ const Shop = (props) => {
       })
       .then((res) => {
         setOwnerName("");
+        setMapLocation("");
         setName("");
         setAddress("");
         setArea("");
@@ -81,6 +84,10 @@ const Shop = (props) => {
       <div
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
+        <h3 style={{ marginBottom: "20px" }}>
+          <span style={{ color: "gray" }}>Logged in as</span>{" "}
+          <strong>{localStorage.getItem("employeeName")}</strong>
+        </h3>
         <h1>Shop Details</h1>
         {localStorage.getItem("userType") === "admin" &&
           localStorage.getItem("userType") !== undefined && (
@@ -113,6 +120,14 @@ const Shop = (props) => {
                     value={address}
                     placeholder="Address"
                     onChange={(val) => setAddress(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={mapLocation}
+                    placeholder="Google Map Location"
+                    onChange={(val) => setMapLocation(val.target.value)}
                   />
                   <br />
                   <Input
@@ -172,6 +187,12 @@ const Shop = (props) => {
           <h3>
             Address : <span style={{ color: "gray" }}>{shop?.address}</span>
           </h3>
+          <br />
+          <a href={shop?.map_location} target="_blank" rel="noreferrer">
+            <h3 style={{ color: "blue" }}>
+              <LinkOutlined /> Google Map Location
+            </h3>
+          </a>
           <br />
           <h3>
             Area : <span style={{ color: "gray" }}>{shop?.area}</span>

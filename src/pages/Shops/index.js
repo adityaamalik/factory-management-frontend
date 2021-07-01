@@ -20,6 +20,7 @@ const Shops = () => {
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [mapLocation, setMapLocation] = useState("");
   const [area, setArea] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -51,33 +52,57 @@ const Shops = () => {
     }
 
     if (qr) {
-      axios
-        .post("/shops", {
-          owner_name: ownerName,
-          name: name,
-          address: address,
-          area: area,
-          pin_code: pinCode,
-          phone_number_1: phoneNumber1,
-          phone_number_2: phoneNumber2,
-          shop_code: code,
-          qr_code: qr,
-        })
-        .then((res) => {
-          setOwnerName("");
-          setName("");
-          setAddress("");
-          setArea("");
-          setPinCode("");
-          setPhoneNumber1("");
-          setPhoneNumber2("");
-          toggleShopInput(false);
-          setShops([res.data, ...shops]);
-          message.success("Successfully created a shop !");
-        })
-        .catch((err) => {
-          message.error("Some error occured !");
-        });
+      let alreadyPresent;
+
+      for (let index = 0; index < shops.length; index++) {
+        if (shops[index].phone_number_1.toString() === phoneNumber1) {
+          alreadyPresent = true;
+        }
+      }
+
+      if (address === "") {
+        message.error("Address cannot be empty");
+      } else if (area === "") {
+        message.error("Area cannot be empty");
+      } else if (pinCode === "") {
+        message.error("Pin code cannot be empty");
+      } else if (phoneNumber1 === "") {
+        message.error("Please enter a phone number");
+      } else if (ownerName === "") {
+        message.error("Enter owner's name");
+      } else if (alreadyPresent) {
+        message.error("Phone number already exists for this shop");
+      } else {
+        axios
+          .post("/shops", {
+            owner_name: ownerName,
+            name: name,
+            address: address,
+            map_location: mapLocation,
+            area: area,
+            pin_code: pinCode,
+            phone_number_1: phoneNumber1,
+            phone_number_2: phoneNumber2,
+            shop_code: code,
+            qr_code: qr,
+          })
+          .then((res) => {
+            setOwnerName("");
+            setName("");
+            setAddress("");
+            setArea("");
+            setPinCode("");
+            setPhoneNumber1("");
+            setPhoneNumber2("");
+            setMapLocation("");
+            toggleShopInput(false);
+            setShops([res.data, ...shops]);
+            message.success("Successfully created a shop !");
+          })
+          .catch((err) => {
+            message.error("Some error occured !");
+          });
+      }
     }
   };
 
@@ -110,6 +135,10 @@ const Shops = () => {
       <div
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
+        <h3 style={{ marginBottom: "20px" }}>
+          <span style={{ color: "gray" }}>Logged in as</span>{" "}
+          <strong>{localStorage.getItem("employeeName")}</strong>
+        </h3>
         <h1>Shops</h1>
         {localStorage.getItem("userType") === "admin" &&
           localStorage.getItem("userType") !== undefined && (
@@ -141,6 +170,14 @@ const Shops = () => {
                     value={address}
                     placeholder="Address"
                     onChange={(val) => setAddress(val.target.value)}
+                  />
+                  <br />
+                  <Input
+                    style={{ margin: "10px", width: "80%" }}
+                    type="text"
+                    value={mapLocation}
+                    placeholder="Google Map Location (Optional)"
+                    onChange={(val) => setMapLocation(val.target.value)}
                   />
                   <br />
                   <Input
@@ -261,6 +298,8 @@ const Shops = () => {
             );
           })}
         </Row>
+        <br />
+        <br />
       </div>
     </>
   );

@@ -23,6 +23,7 @@ const Login = () => {
     if (user === "admin" && password === "adminpassword") {
       localStorage.setItem("userType", "admin");
       localStorage.setItem("employeeId", "admin");
+      localStorage.setItem("employeeName", "admin");
       window.location.pathname = "/home";
     } else if (user === "employee") {
       axios
@@ -33,6 +34,7 @@ const Login = () => {
           } else {
             localStorage.setItem("userType", "employee");
             localStorage.setItem("employeeId", res.data[0].id);
+            localStorage.setItem("employeeName", res.data[0].name);
             window.location.pathname = "/home";
           }
         })

@@ -1,4 +1,4 @@
-import { Row, Col, Card, message, Button, Select, Divider } from "antd";
+import { Row, Col, Card, message, Button, Select, Divider, Modal } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
@@ -13,7 +13,9 @@ const Returns = () => {
   const [shops, setShops] = useState([]);
   const [products, setProducts] = useState([]);
 
-  const [addBox, toggleAddBox] = useState(false);
+  const [shopModal, toggleShopModal] = useState(false);
+  const [productModal, toggleProductModal] = useState(false);
+  const [confirmModal, toggleConfirmModal] = useState(false);
 
   const [shopId, setShopId] = useState("");
 
@@ -79,13 +81,19 @@ const Returns = () => {
         axios
           .post("/transactions", {
             employee_id: localStorage.getItem("employeeId"),
+            employee_name: localStorage.getItem("employeeName"),
             shop_id: shopId,
             products: selectedProducts,
             total_price: totalPrice,
             type: "returns",
           })
           .then((res) => {
-            message.success("Successfully added the products !");
+            message.success("Successfully added to returns !").then(() => {
+              toggleConfirmModal(false);
+              toggleProductModal(false);
+              toggleShopModal(false);
+              setShopId("");
+            });
             setReturns([res.data, ...returns]);
           })
           .catch((err) => {
@@ -161,98 +169,162 @@ const Returns = () => {
       <div
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
+        <h3 style={{ marginBottom: "20px" }}>
+          <span style={{ color: "gray" }}>Logged in as</span>{" "}
+          <strong>{localStorage.getItem("employeeName")}</strong>
+        </h3>
         <h1>Returns</h1>
 
-        <Button onClick={() => toggleAddBox(!addBox)}>Add new return</Button>
+        <Button onClick={() => toggleShopModal(!shopModal)}>
+          Add new return
+        </Button>
 
-        {addBox && (
-          <div style={{ marginTop: "15px" }}>
-            <Select
-              required
-              placeholder="Select Shop"
-              style={{ margin: "10px", width: 300 }}
-              onChange={(val) => setShopId(val)}
-            >
-              {shops.map((val) => {
-                return (
-                  <Option key={val._id} value={val._id}>
-                    {val.name}
-                  </Option>
-                );
-              })}
-            </Select>
-            <br />
+        <Modal
+          centered
+          visible={shopModal}
+          footer={null}
+          onCancel={() => toggleShopModal(false)}
+          bodyStyle={{ textAlign: "center" }}
+        >
+          <h2>Select a shop</h2>
 
-            <p>OR</p>
-            <Button onClick={() => toggleCamera(!showCamera)}>
-              Scan QR Code
-            </Button>
+          <Select
+            required
+            placeholder="Select Shop"
+            style={{ margin: "10px", width: "90%" }}
+            onChange={(val) => setShopId(val)}
+          >
+            {shops.map((val) => {
+              return (
+                <Option key={val._id} value={val._id}>
+                  {val.name}
+                </Option>
+              );
+            })}
+          </Select>
 
-            <br />
-            <br />
-            <br />
+          <br />
+          <p>OR</p>
+          <Button onClick={() => toggleCamera(!showCamera)}>
+            Scan QR Code
+          </Button>
 
-            <div style={{ width: "300px", margin: "auto" }}>
-              {showCamera && (
-                <QrReader
-                  delay={300}
-                  style={{ width: "100%" }}
-                  onError={handleErrorWebCam}
-                  onScan={handleScanWebCam}
-                />
-              )}
-            </div>
+          <br />
+          <br />
+          <br />
 
-            <br />
-            {scanResultWebCam !== "" && (
-              <h3>Found Shop with code : {scanResultWebCam}</h3>
+          <div style={{ width: "300px", margin: "auto" }}>
+            {showCamera && (
+              <QrReader
+                delay={300}
+                style={{ width: "100%" }}
+                onError={handleErrorWebCam}
+                onScan={handleScanWebCam}
+              />
             )}
-
-            <Divider>Select Products</Divider>
-
-            <Row justify="center" align="middle">
-              {products.map((p, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <Col md={8} xs={2} style={{ marginTop: "10px" }}></Col>
-                    <Col md={8} xs={20} key={index}>
-                      <Card bodyStyle={{ padding: "5px" }}>
-                        <Row justify="center" align="middle">
-                          <Col span={6}>
-                            <img src={p.image} height="60px" alt="product" />
-                          </Col>
-                          <Col span={6}>
-                            <strong>{p.name}</strong>
-                            <p>
-                              {p.size} {p.unit}
-                            </p>
-                          </Col>
-                          <Col span={12}>
-                            <Button onClick={() => removeQuantity(index, p.id)}>
-                              -
-                            </Button>
-                            <Button id={`q${index}`}>0</Button>
-                            <Button onClick={() => addQuantity(index, p.id)}>
-                              +
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Col>
-                    <Col md={8} xs={2}></Col>
-                  </React.Fragment>
-                );
-              })}
-            </Row>
-
-            <br />
-
-            <Button onClick={submitOrder} style={{ margin: "10px" }}>
-              <PlusOutlined />
-              Add Order
-            </Button>
           </div>
-        )}
+
+          <br />
+          {scanResultWebCam !== "" && (
+            <h3>Found Shop with code : {scanResultWebCam}</h3>
+          )}
+
+          {shopId !== "" && (
+            <Button
+              onClick={() => toggleProductModal(true)}
+            >{`Continue >`}</Button>
+          )}
+        </Modal>
+
+        <Modal
+          centered
+          visible={productModal}
+          footer={null}
+          onCancel={() => toggleProductModal(false)}
+          bodyStyle={{ textAlign: "center" }}
+        >
+          <h2>Select Products</h2>
+
+          {products.map((p, index) => {
+            return (
+              <div key={index} style={{ width: "100%", marginBottom: "10px" }}>
+                <Card bodyStyle={{ padding: "5px" }}>
+                  <Row justify="center" align="middle">
+                    <Col span={6}>
+                      <img src={p.image} height="60px" alt="product" />
+                    </Col>
+                    <Col span={6}>
+                      <strong>{p.name}</strong>
+                      <p>
+                        {p.size} {p.unit}
+                      </p>
+                    </Col>
+                    <Col span={12}>
+                      <Button onClick={() => removeQuantity(index, p.id)}>
+                        -
+                      </Button>
+                      <Button id={`q${index}`}>0</Button>
+                      <Button onClick={() => addQuantity(index, p.id)}>
+                        +
+                      </Button>
+                    </Col>
+                  </Row>
+                </Card>
+              </div>
+            );
+          })}
+
+          {shopId !== "" && (
+            <Button
+              onClick={() => toggleConfirmModal(true)}
+            >{`Continue >`}</Button>
+          )}
+        </Modal>
+
+        <Modal
+          centered
+          visible={confirmModal}
+          footer={null}
+          onCancel={() => toggleConfirmModal(false)}
+          bodyStyle={{ textAlign: "center" }}
+        >
+          <h2>Summary</h2>
+
+          {products
+            .filter((p) => {
+              return p.quantity !== 0;
+            })
+            .map((p, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{ width: "100%", marginBottom: "10px" }}
+                >
+                  <Card bodyStyle={{ padding: "5px" }}>
+                    <Row justify="center" align="middle">
+                      <Col span={8}>
+                        <img src={p.image} height="60px" alt="product" />
+                      </Col>
+                      <Col span={8}>
+                        <strong>{p.name}</strong>
+                        <p>
+                          {p.size} {p.unit}
+                        </p>
+                      </Col>
+                      <Col span={8}>
+                        <p>Q : {p.quantity}</p>
+                      </Col>
+                    </Row>
+                  </Card>
+                </div>
+              );
+            })}
+
+          <Button onClick={submitOrder} style={{ margin: "10px" }}>
+            <PlusOutlined />
+            Confirm Return
+          </Button>
+        </Modal>
 
         <Divider>Returns History</Divider>
 
@@ -283,7 +355,7 @@ const Returns = () => {
                   >
                     <p>Return Number : {index + 1}</p>
                     <p>Date : {moment(r.date).format("DD-MM-YYYY")}</p>
-                    <strong>Employee Name : {r.employee_id}</strong>
+                    <strong>Employee Name : {r.employee_name}</strong>
                     <p>Total Products : {r.products.length}</p>
                     <p>Total Price : ₹ {r.total_price} /-</p>
                   </Card>

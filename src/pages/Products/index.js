@@ -53,6 +53,10 @@ const Products = () => {
       <div
         style={{ textAlign: "center", marginTop: "50px", marginBottom: "30px" }}
       >
+        <h3 style={{ marginBottom: "20px" }}>
+          <span style={{ color: "gray" }}>Logged in as</span>{" "}
+          <strong>{localStorage.getItem("employeeName")}</strong>
+        </h3>
         <h1>Stock</h1>
         {localStorage.getItem("userType") === "admin" &&
           localStorage.getItem("userType") !== undefined && (
@@ -146,6 +150,12 @@ const Products = () => {
                     bordered={true}
                     style={{ minWidth: 300, marginTop: 30 }}
                   >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      height="100px"
+                    />
+                    <br />
                     <strong>{product.name}</strong>
                     <p>
                       {product.size} {product.unit}

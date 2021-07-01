@@ -20,7 +20,6 @@ const Employees = () => {
         .get("/employees")
         .then((response) => {
           setEmployees(response.data);
-          console.log(response.data);
         })
         .catch((err) => {
           console.log(err);
@@ -37,10 +36,21 @@ const Employees = () => {
   };
 
   const submitEmployee = () => {
+    let alreadyPresent = false;
+
+    for (let index = 0; index < employees.length; index++) {
+      if (employees[index].phone_number.toString() === phone) {
+        alreadyPresent = true;
+      }
+    }
+
     if (name === "") {
       message.error("Name cannot be empty !");
     } else if (phone === "") {
       message.error("Phone Number cannot be empty !");
+    } else if (alreadyPresent) {
+      console.log("employee present");
+      message.error("Employee with this phone number already exist");
     } else {
       axios
         .post("/employees", {
