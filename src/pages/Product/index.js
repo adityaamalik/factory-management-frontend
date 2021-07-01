@@ -156,7 +156,14 @@ const Product = (props) => {
           )}
 
         <div style={{ marginTop: "40px" }}>
-          <img src={product?.image} height="200px" width="auto" alt="Product" />
+          {!!product?.image && (
+            <img
+              src={product?.image}
+              height="200px"
+              width="auto"
+              alt="Product"
+            />
+          )}
           <h3>
             Name : <span style={{ color: "gray" }}>{product?.name}</span>
           </h3>

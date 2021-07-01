@@ -150,11 +150,14 @@ const Products = () => {
                     bordered={true}
                     style={{ minWidth: 300, marginTop: 30 }}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      height="100px"
-                    />
+                    {!!product.image && (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        height="100px"
+                      />
+                    )}
+
                     <br />
                     <strong>{product.name}</strong>
                     <p>

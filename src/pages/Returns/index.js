@@ -1,4 +1,14 @@
-import { Row, Col, Card, message, Button, Select, Divider, Modal } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  message,
+  Button,
+  Select,
+  Divider,
+  Modal,
+  Input,
+} from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
@@ -12,6 +22,10 @@ const Returns = () => {
   const [returns, setReturns] = useState([]);
   const [shops, setShops] = useState([]);
   const [products, setProducts] = useState([]);
+
+  const [originalReturns, setOriginalReturns] = useState([]);
+
+  const [searchVal, setSearchVal] = useState("");
 
   const [shopModal, toggleShopModal] = useState(false);
   const [productModal, toggleProductModal] = useState(false);
@@ -31,6 +45,7 @@ const Returns = () => {
       )
       .then((res) => {
         setReturns(res.data);
+        setOriginalReturns(res.data);
       })
       .catch((err) => message.error("Error fetching returns !"));
 
@@ -162,6 +177,14 @@ const Returns = () => {
           message.error("No shop found with this code !");
         });
     }
+  };
+
+  const handleSearch = () => {
+    const filteredReturns = originalReturns.filter((val) => {
+      return val?.employee_name?.includes(searchVal);
+    });
+
+    setReturns(filteredReturns);
   };
 
   return (
@@ -325,6 +348,37 @@ const Returns = () => {
             Confirm Return
           </Button>
         </Modal>
+
+        <Divider>Search Return Records</Divider>
+
+        <Row justify="center" align="middle">
+          <Col span={16}>
+            <Input
+              type="text"
+              placeholder="Search for sale"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <Button onClick={handleSearch}>Search</Button>
+          </Col>
+        </Row>
+
+        <br />
+
+        <Row justify="center" align="middle">
+          <Col>
+            <Button
+              onClick={() => {
+                setSearchVal("");
+                setReturns(originalReturns);
+              }}
+            >
+              Clear
+            </Button>
+          </Col>
+        </Row>
 
         <Divider>Returns History</Divider>
 

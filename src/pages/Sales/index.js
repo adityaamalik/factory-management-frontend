@@ -179,7 +179,7 @@ const Sales = () => {
 
   const handleSearch = () => {
     const filteredSales = originalSales.filter((val) => {
-      return val.employee_name.includes(searchVal);
+      return val?.employee_name?.includes(searchVal);
     });
 
     setSales(filteredSales);
@@ -272,7 +272,9 @@ const Sales = () => {
                 <Card bodyStyle={{ padding: "5px" }}>
                   <Row justify="center" align="middle">
                     <Col span={6}>
-                      <img src={p.image} height="60px" alt="product" />
+                      {!!p.image && (
+                        <img src={p.image} height="60px" alt="product" />
+                      )}
                     </Col>
                     <Col span={6}>
                       <strong>{p.name}</strong>

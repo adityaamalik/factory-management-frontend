@@ -103,7 +103,9 @@ const Sale = (props) => {
                     <Card bodyStyle={{ padding: "5px" }}>
                       <Row justify="center" align="middle">
                         <Col span={8}>
-                          <img src={p.image} height="60px" alt="product" />
+                          {!!p.image && (
+                            <img src={p.image} height="60px" alt="product" />
+                          )}
                         </Col>
                         <Col span={8}>
                           <strong>{p.name}</strong>
