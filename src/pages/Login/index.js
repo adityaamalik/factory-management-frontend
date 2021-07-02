@@ -78,7 +78,6 @@ const Login = () => {
             }
             key="1"
           >
-            <h1>Hi, Admin</h1>
             <Input
               type="password"
               placeholder="Password for admin"
@@ -100,7 +99,6 @@ const Login = () => {
             }
             key="2"
           >
-            <h1>Hi, Employee</h1>
             <Input
               type="password"
               placeholder="Employee Passcode"

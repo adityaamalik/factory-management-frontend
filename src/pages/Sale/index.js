@@ -52,20 +52,25 @@ const Sale = (props) => {
         <h1>Sale Details</h1>
 
         <div style={{ marginTop: "40px" }}>
-          {sale?.employee_id !== "admin" && (
-            <Link
-              to={{
-                pathname: "/employee",
-                state: {
-                  id: sale?.employee_id,
-                },
-              }}
-            >
-              <h3 style={{ color: "blue" }}>
-                <LinkOutlined /> Go to Employee details
-              </h3>
-            </Link>
-          )}
+          {localStorage.getItem("userType") === "admin" &&
+            localStorage.getItem("userType") !== undefined && (
+              <>
+                {sale?.employee_id !== "admin" && (
+                  <Link
+                    to={{
+                      pathname: "/employee",
+                      state: {
+                        id: sale?.employee_id,
+                      },
+                    }}
+                  >
+                    <h3 style={{ color: "blue" }}>
+                      <LinkOutlined /> Go to Employee details
+                    </h3>
+                  </Link>
+                )}
+              </>
+            )}
 
           <br />
           <h3>

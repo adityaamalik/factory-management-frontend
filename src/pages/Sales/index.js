@@ -4,19 +4,18 @@ import {
   Card,
   message,
   Button,
-  Select,
   Divider,
   Modal,
   Input,
+  AutoComplete,
 } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import QrReader from "react-qr-reader";
 
-const { Option } = Select;
+const { Option } = AutoComplete;
 
 const Sales = () => {
   const [sales, setSales] = useState([]);
@@ -36,6 +35,8 @@ const Sales = () => {
   const [scanResultWebCam, setScanResultWebCam] = useState("");
   const [showCamera, toggleCamera] = useState(false);
 
+  const [result, setResult] = useState([]);
+
   useEffect(() => {
     axios
       .get(
@@ -49,7 +50,10 @@ const Sales = () => {
 
     axios
       .get("/shops")
-      .then((res) => setShops(res.data))
+      .then((res) => {
+        setResult(res.data);
+        setShops(res.data);
+      })
       .catch((err) => {
         message.error("Error fetching shops");
       });
@@ -185,6 +189,18 @@ const Sales = () => {
     setSales(filteredSales);
   };
 
+  const handleShopSearch = (searchVal) => {
+    const filteredShops = shops.filter((val) => {
+      return (
+        val?.name?.includes(searchVal) ||
+        val?.owner_name?.includes(searchVal) ||
+        val?.phone_number_1?.toString().includes(searchVal)
+      );
+    });
+
+    setResult(filteredShops);
+  };
+
   return (
     <>
       <div
@@ -209,21 +225,30 @@ const Sales = () => {
         >
           <h2>Select a shop</h2>
 
-          <Select
-            required
-            placeholder="Select Shop"
-            style={{ margin: "10px", width: "90%" }}
-            onChange={(val) => setShopId(val)}
+          <AutoComplete
+            style={{ width: "100%" }}
+            onSearch={handleShopSearch}
+            placeholder="Search for shops"
+            onSelect={(val) => setShopId(val)}
           >
-            {shops.map((val) => {
-              return (
-                <Option key={val._id} value={val._id}>
-                  {val.name}
-                </Option>
-              );
-            })}
-          </Select>
+            {result.map((shop) => (
+              <Option key={shop._id} value={shop._id}>
+                <Row>
+                  <Col span={12}>{shop?.name}</Col>
+                  <Col span={12} style={{ color: "gray" }}>
+                    {shop?.phone_number_1}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} style={{ color: "gray" }}>
+                    Owner : {shop?.owner_name}
+                  </Col>
+                </Row>
+              </Option>
+            ))}
+          </AutoComplete>
 
+          <br />
           <br />
           <p>OR</p>
           <Button onClick={() => toggleCamera(!showCamera)}>
@@ -344,41 +369,45 @@ const Sales = () => {
             })}
 
           <Button onClick={submitOrder} style={{ margin: "10px" }}>
-            <PlusOutlined />
             Confirm Sale
           </Button>
         </Modal>
 
-        <Divider>Search Sale Records</Divider>
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <>
+              <Divider>Search Sale Records</Divider>
 
-        <Row justify="center" align="middle">
-          <Col span={16}>
-            <Input
-              type="text"
-              placeholder="Search for sale"
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-            />
-          </Col>
-          <Col>
-            <Button onClick={handleSearch}>Search</Button>
-          </Col>
-        </Row>
+              <Row justify="center" align="middle">
+                <Col span={16}>
+                  <Input
+                    type="text"
+                    placeholder="Search for sale"
+                    value={searchVal}
+                    onChange={(e) => setSearchVal(e.target.value)}
+                  />
+                </Col>
+                <Col>
+                  <Button onClick={handleSearch}>Search</Button>
+                </Col>
+              </Row>
 
-        <br />
+              <br />
 
-        <Row justify="center" align="middle">
-          <Col>
-            <Button
-              onClick={() => {
-                setSearchVal("");
-                setSales(originalSales);
-              }}
-            >
-              Clear
-            </Button>
-          </Col>
-        </Row>
+              <Row justify="center" align="middle">
+                <Col>
+                  <Button
+                    onClick={() => {
+                      setSearchVal("");
+                      setSales(originalSales);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </Col>
+              </Row>
+            </>
+          )}
 
         <Divider>Sales History</Divider>
 
@@ -409,7 +438,10 @@ const Sales = () => {
                   >
                     <p>Sale Number : {index + 1}</p>
                     <p>Date : {moment(sale.date).format("DD-MM-YYYY")}</p>
-                    <strong>Employee Name : {sale.employee_name}</strong>
+                    {localStorage.getItem("userType") === "admin" &&
+                      localStorage.getItem("userType") !== undefined && (
+                        <strong>Employee Name : {sale.employee_name}</strong>
+                      )}
                     <p>Total Products : {sale.products.length}</p>
                     <p>Total Price : ₹ {sale.total_price} /-</p>
                   </Card>

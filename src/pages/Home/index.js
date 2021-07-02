@@ -21,13 +21,17 @@ const Home = () => {
         justify="center"
         style={{ margin: "10px", padding: "10px" }}
       >
-        <Col xl={12} lg={12} md={12} sm={24} xs={24}>
-          <Link to="/products">
-            <Card hoverable style={{ marginTop: "10px" }}>
-              <Meta title="STOCK" />
-            </Card>
-          </Link>
-        </Col>
+        {localStorage.getItem("userType") === "admin" &&
+          localStorage.getItem("userType") !== undefined && (
+            <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+              <Link to="/products">
+                <Card hoverable style={{ marginTop: "10px" }}>
+                  <Meta title="STOCK" />
+                </Card>
+              </Link>
+            </Col>
+          )}
+
         <Col xl={12} lg={12} md={12} sm={24} xs={24}>
           <Link to="/shops">
             <Card hoverable style={{ marginTop: "10px" }}>
