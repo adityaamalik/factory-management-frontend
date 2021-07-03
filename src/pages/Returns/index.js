@@ -7,7 +7,8 @@ import {
   Divider,
   Modal,
   Input,
-  AutoComplete,
+  Dropdown,
+  Menu,
 } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -15,8 +16,6 @@ import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import QrReader from "react-qr-reader";
-
-const { Option } = AutoComplete;
 
 const Returns = () => {
   const [returns, setReturns] = useState([]);
@@ -37,6 +36,7 @@ const Returns = () => {
   const [showCamera, toggleCamera] = useState(false);
 
   const [result, setResult] = useState([]);
+  const [selectedShop, setSelectedShop] = useState("");
 
   useEffect(() => {
     axios
@@ -204,6 +204,32 @@ const Returns = () => {
     setResult(filteredShops);
   };
 
+  const menu = (
+    <Menu>
+      {result.map((r) => (
+        <Menu.Item
+          key={r._id}
+          onClick={() => {
+            setShopId(r._id);
+            setSelectedShop(r.name);
+          }}
+        >
+          <Row justify="center" align="middle">
+            <Col span={12}>{r.name}</Col>
+            <Col span={12}>
+              <span style={{ color: "gray" }}>{r.phone_number_1}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <span style={{ color: "gray" }}>{r.owner_name}</span>
+            </Col>
+          </Row>
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
   return (
     <>
       <div
@@ -228,28 +254,18 @@ const Returns = () => {
         >
           <h2>Select a shop</h2>
 
-          <AutoComplete
-            style={{ width: "100%" }}
-            onSearch={handleShopSearch}
-            placeholder="Search for shops"
-            onSelect={(val) => setShopId(val)}
-          >
-            {result.map((shop) => (
-              <Option key={shop._id} value={shop._id}>
-                <Row>
-                  <Col span={12}>{shop?.name}</Col>
-                  <Col span={12} style={{ color: "gray" }}>
-                    {shop?.phone_number_1}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={24} style={{ color: "gray" }}>
-                    Owner : {shop?.owner_name}
-                  </Col>
-                </Row>
-              </Option>
-            ))}
-          </AutoComplete>
+          <Dropdown overlay={menu}>
+            <Input
+              type="text"
+              style={{ width: "100%" }}
+              placeholder="Search for shops"
+              onChange={(e) => {
+                handleShopSearch(e.target.value);
+                setSelectedShop(e.target.value);
+              }}
+              value={selectedShop}
+            />
+          </Dropdown>
 
           <br />
           <br />
